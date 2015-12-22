@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+        
+    <!-- scall all spring components from the package org.jpm.stocks -->	
+	<context:component-scan base-package="org.jpm.stocks"></context:component-scan>
+	
+	<!-- Enabling annotations -->	
+	<context:annotation-config></context:annotation-config>
+
+	<bean id ="loadProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:data.properties*" />
+
+	</bean>
+
+	<bean id="propertyBean" class="org.jpm.stocks.property.PropertyBean">
+		<property name="stockType" value="${stockType}"></property>
+		<property name="stockSymbol" value="${stockSymbol}"></property>
+		<property name="transactionType" value="${transactionType}"></property>
+		<property name="lastDividend" value="${lastDividend}"></property>
+		<property name="fixedDividend" value="${fixedDividend}"></property>
+		<property name="parValue" value="${parValue}"></property>
+		<property name="shareQuantity" value="${shareQuantity}"></property>
+		<property name="sharePrice" value="${sharePrice}"></property>
+		<property name="timeOfPurchase" value="${timeOfPurchase}"></property>
+	</bean>
+	<!--  common bean which stores the individual stock values as a collection -->
+	
+	<bean id="stocks" class="org.jpm.stocks.data.StockCollections">
+		<property name="stockCollections">
+			<map>
+				<entry key="TEA" value-ref="stockTEA"></entry>
+				<entry key="POP" value-ref="stockPOP"></entry>
+				<entry key="ALE" value-ref="stockALE"></entry>
+				<entry key="GIN" value-ref="stockGIN"></entry>
+				<entry key="JOE" value-ref="stockJOE"></entry>
+			</map>
+		</property>
+	</bean>
+		
+	<!--  Individual stock values as mentioned in the use case document -->	
+	<bean id="stockTEA" class="org.jpm.stocks.data.Stock">
+		<property name="stock" value="TEA"></property>
+		<property name="type" value="COMMON"></property>
+		<property name="lastDividend" value="0"></property>
+		<property name="fixedDividend" value="0"></property>
+		<property name="parValue" value="100"></property>
+	</bean>
+	<bean id="stockPOP" class="org.jpm.stocks.data.Stock">
+		<property name="stock" value="POP"></property>
+		<property name="type" value="COMMON"></property>
+		<property name="lastDividend" value="8"></property>
+		<property name="fixedDividend" value="0"></property>
+		<property name="parValue" value="100"></property>
+	</bean>
+	<bean id="stockALE" class="org.jpm.stocks.data.Stock">
+		<property name="stock" value="ALE"></property>
+		<property name="type" value="COMMON"></property>
+		<property name="lastDividend" value="23"></property>
+		<property name="fixedDividend" value="0"></property>
+		<property name="parValue" value="60"></property>
+	</bean>
+	<bean id="stockGIN" class="org.jpm.stocks.data.Stock">
+		<property name="stock" value="GIN"></property>
+		<property name="type" value="PREFERRED"></property>
+		<property name="lastDividend" value="8"></property>
+		<property name="fixedDividend" value="0.02"></property>
+		<property name="parValue" value="100"></property>
+	</bean>
+	<bean id="stockJOE" class="org.jpm.stocks.data.Stock">
+		<property name="stock" value="JOE"></property>
+		<property name="type" value="COMMON"></property>
+		<property name="lastDividend" value="13"></property>
+		<property name="fixedDividend" value="0"></property>
+		<property name="parValue" value="250"></property>
+	</bean>
+	
+	<bean id="StockTransactions" class="org.jpm.stocks.transaction.StockTransactions" scope="singleton">
+		<property name="stockTransactionsList" >
+			<list>
+			
+			<!-- negative values for time before current time -->
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-30"/>
+					<property name="stock" ref="stockTEA"/>
+					<property name="transactionType" value="SELL"/>
+					<property name="shareQuantity" value="10"/>
+					<property name="sharePrice" value="40"/>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-29"/>
+					<property name="stock" ref="stockPOP"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="20"></property>
+					<property name="sharePrice" value="50"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-26"/>
+					<property name="stock" ref="stockALE"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="30"></property>
+					<property name="sharePrice" value="70"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-30"/>
+					<property name="stock" ref="stockGIN"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="40"></property>
+					<property name="sharePrice" value="80"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-24"/>
+					<property name="stock" ref="stockJOE"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="50"></property>
+					<property name="sharePrice" value="90"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-45"/>
+					<property name="stock" ref="stockTEA"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="60"></property>
+					<property name="sharePrice" value="100"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-10"/>
+					<property name="stock" ref="stockPOP"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="70"></property>
+					<property name="sharePrice" value="110"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-25"/>
+					<property name="stock" ref="stockALE"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="80"></property>
+					<property name="sharePrice" value="120"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-28"/>
+					<property name="stock" ref="stockGIN"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="90"></property>
+					<property name="sharePrice" value="40"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-34"/>
+					<property name="stock" ref="stockJOE"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="100"></property>
+					<property name="sharePrice" value="50"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-34"/>
+					<property name="stock" ref="stockTEA"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="10"></property>
+					<property name="sharePrice" value="60"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-24"/>
+					<property name="stock" ref="stockPOP"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="20"></property>
+					<property name="sharePrice" value="70"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-18"/>
+					<property name="stock" ref="stockALE"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="30"></property>
+					<property name="sharePrice" value="80"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-29"/>
+					<property name="stock" ref="stockGIN"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="40"></property>
+					<property name="sharePrice" value="90"></property>
+				</bean>
+				
+				<!--  positive values for future time-->
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-20"/>
+					<property name="stock" ref="stockJOE"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="50"></property>
+					<property name="sharePrice" value="100"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "-21"/>
+					<property name="stock" ref="stockTEA"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="60"></property>
+					<property name="sharePrice" value="110"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockPOP"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="70"></property>
+					<property name="sharePrice" value="120"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockALE"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="80"></property>
+					<property name="sharePrice" value="130"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockGIN"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="90"></property>
+					<property name="sharePrice" value="140"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockJOE"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="100"></property>
+					<property name="sharePrice" value="150"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockTEA"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="10"></property>
+					<property name="sharePrice" value="160"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockPOP"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="20"></property>
+					<property name="sharePrice" value="170"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockALE"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="30"></property>
+					<property name="sharePrice" value="180"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockGIN"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="40"></property>
+					<property name="sharePrice" value="190"></property>
+				</bean>
+
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockJOE"></property>
+					<property name="transactionType" value="SELL"></property>
+					<property name="shareQuantity" value="50"></property>
+					<property name="sharePrice" value="200"></property>
+				</bean>
+				
+				<bean class="org.jpm.stocks.transaction.StockTransaction">
+					<property name="timeOfPurchase" value = "31"/>
+					<property name="stock" ref="stockTEA"></property>
+					<property name="transactionType" value="BUY"></property>
+					<property name="shareQuantity" value="60"></property>
+					<property name="sharePrice" value="210"></property>
+				</bean>
+				
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!--  Singleton class that gives the spring component handler to the calling class -->
+	<bean id="StockService" class="org.jpm.stocks.service.StockServiceImpl" scope="singleton">
+		<property name="dataImpl" ref="DataEntityImpl">
+		</property>
+	</bean>
+	
+	<bean id="DataEntityImpl" class="org.jpm.stocks.data.collection.DataEntityImpl" scope="singleton">
+		<property name="stockTransactions" ref="StockTransactions"/>
+		<property name="stocks" ref="stocks"/>
+		
+	</bean>
+        
+</beans>
